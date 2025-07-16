@@ -113,7 +113,7 @@ function App() {
 
         {patient && !isLoading && (
           <>
-            <PatientInfo patient={patient} />
+            <PatientInfo patient={patient}/>
             <MedicationForm
               patientId={patient._id || patient.id}
               onSave={handleSavePrescription}

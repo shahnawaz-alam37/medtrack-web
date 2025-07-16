@@ -15,7 +15,7 @@ const PatientLookup = ({ onPatientFound, isLoading, error }) => {
       const result = await getPatientInfo(patientId);
       
       if (result.success) {
-        // Transform API response to match component expectations
+        // Transform API response to match component expectations, but keep all extra fields
         const patientData = {
           id: result.data.id || patientId,
           name: result.data.name || result.data.fullName || 'Unknown Patient',
@@ -26,9 +26,13 @@ const PatientLookup = ({ onPatientFound, isLoading, error }) => {
           address: result.data.address || 'N/A',
           bloodType: result.data.bloodType || result.data.blood_type || 'N/A',
           allergies: result.data.allergies || [],
-          medicalHistory: result.data.medicalHistory || result.data.medical_history || []
+          medicalHistory: result.data.medicalHistory || result.data.medical_history || [],
+          currentMedications: result.data.currentMedications || [],
+          medicationReminders: result.data.medicationReminders || [],
+          medicalReminders: result.data.medicalReminders || [],
+          // Spread any other fields from backend
+          ...result.data
         };
-        
         onPatientFound(patientData);
       } else {
         // Handle API error

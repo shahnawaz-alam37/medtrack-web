@@ -2,6 +2,10 @@ import React from 'react';
 import { User, Phone, Mail, MapPin, Heart, AlertTriangle, FileText } from 'lucide-react';
 
 const PatientInfo = ({ patient }) => {
+  console.log("patient", patient);
+  // Combine currentMedications and medicationReminders for display
+  const currentMedications = Array.isArray(patient.currentMedications) ? patient.currentMedications : [];
+  const medicationReminders = Array.isArray(patient.medicationReminders) ? patient.medicationReminders : [];
   return (
     <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
       <div className="flex items-center mb-6">
@@ -113,13 +117,13 @@ const PatientInfo = ({ patient }) => {
         </div>
         {/* Current Medications Section */}
         <div className="mt-8">
-          <div className="flex items-center mb-3">
+          {/* <div className="flex items-center mb-3">
             <FileText className="h-5 w-5 text-green-500 mr-2" />
             <h3 className="font-semibold text-gray-900">Current Medications</h3>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {Array.isArray(patient.currentMedications) && patient.currentMedications.length > 0 ? (
-              patient.currentMedications.map((med, idx) => (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {currentMedications.length > 0 ? (
+              currentMedications.map((med, idx) => (
                 <span
                   key={idx}
                   className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
@@ -130,7 +134,112 @@ const PatientInfo = ({ patient }) => {
             ) : (
               <span className="text-gray-500 text-sm">No current medications listed.</span>
             )}
-          </div>
+          </div> */}
+          {/* Medication Reminders Section (from patient.medicationReminders) */}
+          {Array.isArray(medicationReminders) && medicationReminders.length > 0 && (
+            <div className="mt-2">
+              <div className="flex items-center mb-1">
+                <FileText className="h-5 w-5 text-purple-500 mr-2" />
+                <h4 className="font-semibold text-gray-900 text-base">Past Medications</h4>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {medicationReminders.map((reminder, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-purple-50 border border-purple-200 rounded-lg p-4 text-purple-900 shadow-sm"
+                  >
+                    <div className="font-semibold text-purple-700 mb-1">
+                      {reminder.medicineName || 'Medication Reminder'}
+                    </div>
+                    {reminder.dosage && (
+                      <div className="text-sm mb-1"><span className="font-medium">Dosage:</span> {reminder.dosage}</div>
+                    )}
+                    {reminder.quantity && (
+                      <div className="text-sm mb-1"><span className="font-medium">Quantity:</span> {reminder.quantity}</div>
+                    )}
+                    {Array.isArray(reminder.times) && reminder.times.length > 0 && (
+                      <div className="text-sm mb-1"><span className="font-medium">Times:</span> {reminder.times.join(', ')}</div>
+                    )}
+                    {reminder.durationDays && (
+                      <div className="text-sm mb-1"><span className="font-medium">Duration (days):</span> {reminder.durationDays}</div>
+                    )}
+                    {reminder.startDate && (
+                      <div className="text-sm mb-1"><span className="font-medium">Start Date:</span> {new Date(reminder.startDate).toLocaleDateString()}</div>
+                    )}
+                    {reminder.endDate && (
+                      <div className="text-sm mb-1"><span className="font-medium">End Date:</span> {new Date(reminder.endDate).toLocaleDateString()}</div>
+                    )}
+                    {reminder.instructions && (
+                      <div className="text-sm mb-1"><span className="font-medium">Instructions:</span> {reminder.instructions}</div>
+                    )}
+                    {reminder.frequency && (
+                      <div className="text-sm mb-1"><span className="font-medium">Frequency:</span> {reminder.frequency}</div>
+                    )}
+                    {reminder.prescribedBy && (
+                      <div className="text-sm mb-1"><span className="font-medium">Prescribed By:</span> {typeof reminder.prescribedBy === 'object' ? JSON.stringify(reminder.prescribedBy) : reminder.prescribedBy}</div>
+                    )}
+                    {reminder.createdAt && (
+                      <div className="text-xs text-purple-700"><span className="font-medium">Created At:</span> {new Date(reminder.createdAt).toLocaleString()}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Medical Reminders Section (from patient.medicalReminders) */}
+          {Array.isArray(patient.medicalReminders) && patient.medicalReminders.length > 0 && (
+            <div className="mt-2">
+              <div className="flex items-center mb-1">
+                <FileText className="h-5 w-5 text-pink-500 mr-2" />
+                <h4 className="font-semibold text-gray-900 text-base">Medical Reminders</h4>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {patient.medicalReminders.map((reminder, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-pink-50 border border-pink-200 rounded-lg p-4 text-pink-900 shadow-sm"
+                  >
+                    <div className="font-semibold text-pink-700 mb-1">
+                      {reminder.title || reminder.type || 'Medical Reminder'}
+                    </div>
+                    {reminder.date && (
+                      <div className="text-sm mb-1">
+                        <span className="font-medium">Date:</span> {new Date(reminder.date).toLocaleString()}
+                      </div>
+                    )}
+                    {reminder.time && (
+                      <div className="text-sm mb-1">
+                        <span className="font-medium">Time:</span> {reminder.time}
+                      </div>
+                    )}
+                    {reminder.location && (
+                      <div className="text-sm mb-1">
+                        <span className="font-medium">Location:</span> {reminder.location}
+                      </div>
+                    )}
+                    {reminder.status && (
+                      <div className="text-sm mb-1">
+                        <span className="font-medium">Status:</span> {reminder.status}
+                      </div>
+                    )}
+                    {reminder.notes && (
+                      <div className="text-sm mb-1">
+                        <span className="font-medium">Notes:</span> {reminder.notes}
+                      </div>
+                    )}
+                    {/* Show any other fields dynamically */}
+                    {Object.entries(reminder).map(([key, value]) => (
+                      !['title','type','date','time','location','status','notes','_id','id','createdAt','updatedAt','__v'].includes(key) && value ? (
+                        <div className="text-xs text-pink-700" key={key}>
+                          <span className="font-medium">{key}:</span> {typeof value === 'object' ? JSON.stringify(value) : value}
+                        </div>
+                      ) : null
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

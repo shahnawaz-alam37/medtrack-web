@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: 'http://44.204.161.13:3000/api/v1/users',
+  baseURL: 'http://localhost:3000/api/v1/users',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -48,9 +48,8 @@ api.interceptors.response.use(
 // Doctor fetches patient info by ID
 export const getPatientInfo = async (patientId) => {
   try {
-    const response = await api.get(`http://44.204.161.13:3000/api/v1/users/patient_info/${patientId}`);
+    const response = await api.get(`http://localhost:3000/api/v1/users/patient_info/${patientId}`);
     console.log(response.data);
-    console.log(response.data.data);
     console.log("hello world");
     return {
       success: true,
@@ -70,7 +69,7 @@ export const addMedicationReminder = async (medicationData) => {
     console.log('Sending medication data:', medicationData);
     console.log('API URL:', '/add_medication_reminder');
     
-    const response = await api.post('http://44.204.161.13:3000/api/v1/users/add_medication_reminder', medicationData);
+    const response = await api.post('http://localhost:3000/api/v1/users/add_medication_reminder', medicationData);
     console.log('API Response:', response.data);
     return {
       success: true,
@@ -90,8 +89,9 @@ export const addMedicationReminder = async (medicationData) => {
 // Doctor fetches patient info by ID (using fetch)
 export const getPatientInfoFetch = async (patientId) => {
   try {
-    const response = await fetch(`http://44.204.161.13:3000/api/v1/users/patient_info/${patientId}`);
+    const response = await fetch(`http://localhost:3000/api/v1/users/patient_info/${patientId}`);
     const data = await response.json();
+    console.log("data from getpatientinfo", data);
     if (!response.ok) {
       throw new Error(data.message || 'Failed to fetch patient information');
     }
@@ -110,7 +110,7 @@ export const getPatientInfoFetch = async (patientId) => {
 // Doctor adds medication for a user (using fetch)
 export const addMedicationReminderFetch = async (medicationData) => {
   try {
-    const response = await fetch('http://44.204.161.13:3000/api/v1/users/add_medication_reminder', {
+    const response = await fetch('http://localhost:3000/api/v1/users/add_medication_reminder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -132,5 +132,6 @@ export const addMedicationReminderFetch = async (medicationData) => {
     };
   }
 };
+
 
 export default api;
