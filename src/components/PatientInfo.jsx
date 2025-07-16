@@ -111,6 +111,27 @@ const PatientInfo = ({ patient }) => {
             </div>
           </div>
         </div>
+        {/* Current Medications Section */}
+        <div className="mt-8">
+          <div className="flex items-center mb-3">
+            <FileText className="h-5 w-5 text-green-500 mr-2" />
+            <h3 className="font-semibold text-gray-900">Current Medications</h3>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {Array.isArray(patient.currentMedications) && patient.currentMedications.length > 0 ? (
+              patient.currentMedications.map((med, idx) => (
+                <span
+                  key={idx}
+                  className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
+                >
+                  {typeof med === 'string' ? med : med.medicineName || JSON.stringify(med)}
+                </span>
+              ))
+            ) : (
+              <span className="text-gray-500 text-sm">No current medications listed.</span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://54.210.235.33:3000/api/v1/users',
+  baseURL: 'http://44.204.161.13:3000/api/v1/users',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -48,8 +48,10 @@ api.interceptors.response.use(
 // Doctor fetches patient info by ID
 export const getPatientInfo = async (patientId) => {
   try {
-    const response = await api.get(`/patient_info/${patientId}`);
+    const response = await api.get(`http://44.204.161.13:3000/api/v1/users/patient_info/${patientId}`);
     console.log(response.data);
+    console.log(response.data.data);
+    console.log("hello world");
     return {
       success: true,
       data: response.data.data,
@@ -68,7 +70,7 @@ export const addMedicationReminder = async (medicationData) => {
     console.log('Sending medication data:', medicationData);
     console.log('API URL:', '/add_medication_reminder');
     
-    const response = await api.post('/add_medication_reminder', medicationData);
+    const response = await api.post('http://44.204.161.13:3000/api/v1/users/add_medication_reminder', medicationData);
     console.log('API Response:', response.data);
     return {
       success: true,
@@ -79,6 +81,54 @@ export const addMedicationReminder = async (medicationData) => {
     return {
       success: false,
       error: error.response?.data?.message || error.message || 'Failed to save medication reminder',
+    };
+  }
+};
+
+// --- FETCH API VERSIONS ---
+
+// Doctor fetches patient info by ID (using fetch)
+export const getPatientInfoFetch = async (patientId) => {
+  try {
+    const response = await fetch(`http://44.204.161.13:3000/api/v1/users/patient_info/${patientId}`);
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch patient information');
+    }
+    return {
+      success: true,
+      data: data.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || 'Failed to fetch patient information',
+    };
+  }
+};
+
+// Doctor adds medication for a user (using fetch)
+export const addMedicationReminderFetch = async (medicationData) => {
+  try {
+    const response = await fetch('http://44.204.161.13:3000/api/v1/users/add_medication_reminder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(medicationData),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to save medication reminder');
+    }
+    return {
+      success: true,
+      data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || 'Failed to save medication reminder',
     };
   }
 };
